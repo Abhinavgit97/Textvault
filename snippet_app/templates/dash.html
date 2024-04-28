@@ -1,0 +1,96 @@
+{% extends 'base.html' %} {% block content %}
+<div class="content-wrapper">
+  <div class="row"></div>
+
+  <div class="row">
+    <div class="col-md-10 grid-margin stretch-card" >
+      <div class="card">
+        <div class="card-body" >
+          <h4 class="card-title">TEXT VAULT - Text Storage and Retrieval </h4>
+        
+          <div
+            class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3"
+          >
+            <div class="text-md-center text-xl-left">
+              <h6 class="mb-1">Total Tags</h6>
+            </div>
+            <div
+              class="align-self-center flex-grow text-right text-md-center text-xl-right py-md-2 py-xl-0"
+            >
+              <h6 class="font-weight-bold mb-0"  style="color: rgb(184, 202, 23)">{{tag_count}}</h6>
+            </div>
+          </div>
+          <div
+            class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3"
+          >
+            <div class="text-md-center text-xl-left">
+              <h6 class="mb-1">Total documents</h6>
+            </div>
+            <div
+              class="align-self-center flex-grow text-right text-md-center text-xl-right py-md-2 py-xl-0"
+            >
+              <h6 class="font-weight-bold mb-0"  style="color: rgb(184, 202, 23)">{{doc_count}}</h6>
+            </div>
+          </div>
+
+
+          <div
+            class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3"
+          >
+            <div class="text-md-center text-xl-left">
+              <h6 class="mb-1">Number of Users registered</h6>
+            </div>
+            <div
+              class="align-self-center flex-grow text-right text-md-center text-xl-right py-md-2 py-xl-0"
+            >
+              <h6 class="font-weight-bold mb-0" style="color: rgb(184, 202, 23)">{{user_count}}</h6>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+function isAccessTokenExpired() {
+    var accessToken = localStorage.getItem('access_token');
+    var accessTokenExp = new Date(parseInt(localStorage.getItem('access_token_exp')) * 1000);
+    var currentTime = new Date();
+    console.log("Current time :"+currentTime)
+    console.log("Access token exp :"+accessTokenExp)
+    console.log(currentTime > accessTokenExp)
+    return currentTime > accessTokenExp;
+}
+
+function refreshAccessToken() {
+    var refreshToken = localStorage.getItem('refresh_token');
+    
+    $.ajax({
+        type: 'POST',
+        url: '/refresh/',
+        data: JSON.stringify({ refresh: refreshToken }),
+        contentType: 'application/json',
+        success: function(response) {
+            localStorage.setItem('access_token', response.access);
+            localStorage.setItem('access_token_exp', response.access_exp);
+        },
+        error: function(xhr, textStatus, errorThrown) {
+            console.error('Error refreshing access token:', xhr.responseJSON.error);
+           
+        }
+    });
+}
+
+
+if (isAccessTokenExpired()) {
+    refreshAccessToken();
+}
+
+  
+</script>
+
+{% endblock %}

@@ -1,0 +1,280 @@
+{% extends 'base.html' %} {% block content %}
+
+<style>
+
+    .fa-trash-can {
+        font-size: 2em; 
+        color: tomato; 
+    }
+    .fa-trash-can:hover {
+        cursor: pointer; 
+        color: #e92222;
+    }
+
+  .mdi-delete:hover {
+    color: #030202;
+    font-size: 1.5em;
+    cursor: pointer;
+  }
+
+  @import url("https://fonts.googleapis.com/css?family=Nunito:400,700");
+
+  * {
+    transition: all 0.3s ease-out;
+  }
+
+  .container {
+    /* width: 100%;
+        height: 100%; */
+    display: flex;
+    flex-wrap: wrap;
+    /* align-items: center; */
+    /* justify-content: center; */
+  }
+  .key {
+    font-size: 14px;
+    font-weight: bold;
+    padding-right: 5px;
+    color: #030202;
+  }
+
+  .value {
+    font-size: 14px;
+
+    color: #2a2929;
+  }
+
+  .card2 {
+    display: block;
+    top: 0px;
+    position: relative;
+    min-width: 200px;
+    max-width: 262px;
+    background-color: rgb(255, 254, 254);
+    border-radius: 8px;
+    padding: 22px 24px;
+    margin: 7px;
+    text-decoration: none;
+    z-index: 0;
+    overflow: hidden;
+    border: 1px solid #f2f8f9;
+
+    &:hover {
+      transition: all 0.2s ease-out;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      top: -4px;
+      border: 1px solid #cccccc;
+      text-decoration: none;
+      background-color: rgb(255, 252, 252);
+      cursor: context-menu;
+    }
+
+    &:hover:before {
+      transform: scale(3.15);
+    }
+  }
+  input[type="checkbox"] {
+  width: 1em;
+  height: 1rem;
+  accent-color: rgb(74, 15, 235);
+}
+
+
+
+
+  
+</style>
+
+<div class="content-wrapper">
+  <div class="row">
+    <div class="col-12 grid-margin">
+      <div class="card">
+        <div class="card-body">
+
+          <div style="position: relative;">
+            <h4 class="card-title" style="display: inline-block; width: calc(100% - 2em);">All Snippets (<span id="total_id" style="color: #b6ce30;">0</span>)</h4>
+  
+            <i class="fa-solid fa-trash-can" id="trash_id"></i>
+      
+        </div>
+      
+        
+          <!-- ====================== LIST ITEMS ============================ -->
+
+          <div class="container">
+
+
+          </div>
+
+          <!-- ====================== LIST ITEMS END ================= -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  $(document).ready(function() {
+    
+      function getSnippetOverview() {
+          $.ajax({
+              url: '/get_all_snippets/', 
+              type: 'GET',
+              success: function(data) {
+             
+                  console.log(data);
+                  document.getElementById('total_id').innerHTML = data.total_snippets
+                  
+                  populateCards(data.snippets);
+              },
+              error: function(xhr, status, error) {
+                 
+                  console.error(xhr.responseText);
+              }
+          });
+      }
+
+      function populateCards(snippets) {
+          
+          snippets.forEach(function(snippet) {
+              var card = $('<a>').addClass('card2').attr('href', '#');
+                var checkbox = $('<input>').attr({
+        'type': 'checkbox',
+        'name': 'content_select'
+    }).css('display', 'inline-block'); 
+    var title = $('<h4>').text(snippet.title).css({
+        'color': 'rgb(41, 102, 41)',
+        'display': 'inline-block', 
+        'margin': '0 0 0 5px' 
+    });
+    var container = $('<div>').css('white-space', 'nowrap'); 
+    container.append(checkbox); 
+    container.append(title); 
+    card.append(container);
+             
+              card.append($('<input>').attr({
+                  'type': 'hidden',
+                  'name': 'snippet_id',
+                  'id': 'snippet_idval',
+                  'value': snippet.id
+              }));
+              card.append($('<span>').addClass('key').text('Created on : '));
+              card.append($('<span>').addClass('value').text(snippet.timestamp).css('font-size', '12px').css('font-size', '12px'));
+              card.append($('<br>'));
+              card.append($('<span>').addClass('key').text('Created by: '));
+              card.append($('<span>').addClass('value').text(snippet.user_first_name));
+              card.append($('<br>'));
+              card.append(`
+                    <div style="width: 100%; display: flex; justify-content: flex-end; margin-top: 10px;">
+                        
+                        <form id="viewSnippetForm" action="{% url 'edit_snippet_page' %}" method="POST" style="display: none">
+                            {% csrf_token %}
+                            <input type="hidden" name="snippet_id_inp" id="id_input2" />
+                        </form>
+                        <svg id="edit_snippetID" class="editIcon" xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24" style="cursor: pointer">
+                            <path fill="currentColor" d="M6 2c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-1.9l10-10V8l-6-6zm7 1.5L18.5 9H13zm7.1 9.5c-.1 0-.3.1-.4.2l-1 1l2.1 2.1l1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-2 1.8L12 20.9V23h2.1l6.1-6.1z"></path>
+                        </svg>
+                    </div>
+                `)
+
+             
+              $('.container').append(card);
+          });
+      }
+
+     
+      getSnippetOverview();
+
+
+
+
+      $(document).on('click', '.editIcon', function() {
+        
+        const container = $(this).closest(".card2").find("input[name='snippet_id']");
+      
+        const IdValue = container.val();
+       
+        $('#id_input2').val(IdValue);
+   
+        $('#viewSnippetForm').submit();
+    });
+
+
+
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+
+
+    
+
+
+    $('#trash_id').on('click', function() {
+    var selectedSnippets = [];
+    
+    $('input[name="content_select"]:checked').each(function() {
+        selectedSnippets.push($(this).closest('.card2').find('#snippet_idval').val());
+    });
+    
+    if (selectedSnippets.length === 0) {
+        alert('No snippets selected for deletion.');
+      
+    }
+    else{
+      console.log(selectedSnippets);
+
+      const confrm_sts = confirm("Do you really want delete selected items?")
+      if(confrm_sts == true){
+        
+        var csrftoken = getCookie('csrftoken');
+        $.ajax({
+          url: '/delete_snippets/', 
+          type: 'POST',
+          data: { item_ids: selectedSnippets }, 
+          headers: {
+                  'X-CSRFToken': csrftoken  
+              },
+          success: function(data) {
+              console.log('Items deleted successfully:', data);
+              alert('Seletced items deleted successfully!!!')
+              window.location.reload()
+          },
+          error: function(xhr, status, error) {
+            
+              console.error('Error deleting items:', xhr.responseText);
+              alert('Oops some error occured!!!')
+          }
+        });
+      }
+      
+    }
+    
+    
+    
+ 
+});
+
+
+
+  });
+</script>
+
+
+
+
+{% endblock %}

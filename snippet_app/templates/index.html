@@ -1,0 +1,605 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+    <title>Text-Valut</title>
+    <meta content="" name="description" />
+    <meta content="" name="keywords" />
+
+    <link href="{% static 'assets22/img/favicon.png' %}" rel="icon" />
+    <link
+      href="{% static 'assets2/img/apple-touch-icon.png' %}"
+      rel="apple-touch-icon"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'assets2/vendor/aos/aos.css' %}" rel="stylesheet" />
+    <link
+      href="{% static 'assets2/vendor/bootstrap/css/bootstrap.min.css' %}"
+      rel="stylesheet"
+    />
+    <link
+      href="{% static 'assets2/vendor/bootstrap-icons/bootstrap-icons.css' %}"
+      rel="stylesheet"
+    />
+    <link
+      href="{% static 'assets2/vendor/boxicons/css/boxicons.min.css' %}"
+      rel="stylesheet"
+    />
+    <link
+      href="{% static 'assets2/vendor/glightbox/css/glightbox.min.css' %}"
+      rel="stylesheet"
+    />
+    <link
+      href="{% static 'assets2/vendor/remixicon/remixicon.css' %}"
+      rel="stylesheet"
+    />
+    <link
+      href="{% static 'assets2/vendor/swiper/swiper-bundle.min.css' %}"
+      rel="stylesheet"
+    />
+
+    <!-- Template Main CSS File -->
+    <link href="{% static 'assets2/css/style.css' %}" rel="stylesheet" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <!--Stylesheet-->
+    <style media="screen">
+      *,
+      *:before,
+      *:after {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      .background {
+        width: 490px;
+        height: 580px;
+        position: absolute;
+        transform: translate(-50%, -50%);
+        left: 50%;
+        top: 50%;
+      }
+      .background .shape {
+        height: 200px;
+        width: 200px;
+        position: absolute;
+        border-radius: 50%;
+      }
+      .shape:first-child {
+        background: linear-gradient(#1845ad, #23a2f6);
+        left: -10px;
+        top: 0px;
+      }
+      .shape:last-child {
+        background: linear-gradient(to right, #ff512f, #f09819);
+        right: -30px;
+        bottom: -190px;
+      }
+      .formclass {
+        height: 480px;
+        width: 350px;
+        background-color: rgba(255, 255, 255, 0.13);
+        position: absolute;
+        transform: translate(-50%, -50%);
+        top: 50%;
+        left: 50%;
+        border-radius: 10px;
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+        padding: 50px 35px;
+      }
+      .formclass * {
+        font-family: "Poppins", sans-serif;
+        color: #ffffff;
+        letter-spacing: 0.5px;
+        outline: none;
+        border: none;
+      }
+      .formclass h3 {
+        font-size: 32px;
+        font-weight: 500;
+        line-height: 42px;
+        text-align: center;
+      }
+
+      label {
+        display: block;
+        margin-top: 30px;
+        font-size: 16px;
+        font-weight: 500;
+      }
+      input {
+        display: block;
+        height: 50px;
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.07);
+        border-radius: 3px;
+        padding: 0 10px;
+        margin-top: 8px;
+        font-size: 14px;
+        font-weight: 300;
+      }
+      ::placeholder {
+        color: #e5e5e5;
+      }
+      .button_login {
+        margin-top: 50px;
+        width: 100%;
+        background-color: #ffffff;
+        color: #080710;
+        padding: 15px 0;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      /* Hover effect */
+.button_login:hover {
+    background-color: #080710;
+    color: #ffffff;
+}
+
+      .loginform {
+        display: none;
+      }
+
+      .logbtn {
+        padding: 8px 20px;
+        margin-left: 30px;
+        border-radius: 50px;
+        color: #ffffff;
+        background-color: #09090900;
+        font-size: 14px;
+
+        border: 2px solid #47b2e4;
+        font-weight: 600;
+      }
+      .logbtn:hover {
+        color: #ffffff;
+        background: #31a9e1;
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+
+
+
+      $(document).ready(function () {
+        const registerForm = $("#registrationformid");
+  const loginForm = $("#loginformid");
+
+
+  loginForm.show();
+  registerForm.hide();
+
+  $("#flipid").click(function() {
+    var buttonText = $(this).text();
+    if (buttonText === 'Register') {
+      loginForm.hide();
+      registerForm.show();
+      $(this).text("Login");
+    } else {
+      loginForm.show();
+      registerForm.hide();
+      $(this).text("Register");
+    }
+  });
+
+        function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+
+
+    var csrftoken = getCookie('csrftoken');
+
+
+
+        $('#registerbtn').click(function() {
+
+          var  first_name = $('#firstname').val()
+          var  last_name = $('#lastname').val()
+          var  email = $('#email').val()
+          var  username = $('#newusername').val()
+          var  password = $('#newpassword').val()
+          
+
+        $.ajax({
+            type: 'POST',
+            url: '/register/',
+            data: {
+              first_name: first_name,
+              last_name: last_name,
+              email: email,
+              username: username,
+              password: password,
+            
+
+            },
+            dataType: 'json',
+            headers: {
+                'X-CSRFToken': csrftoken  
+            },
+            success: function(response) {
+                
+                alert('Registration successful!');
+                window.location.href = '/index_page/';
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                alert('Registration failed: ' + xhr.responseJSON.error);
+            }
+        });
+    });
+
+
+ 
+
+
+
+
+        $("#loginbtn").click(function () {
+          var username = $("#username").val();
+          var password = $("#password").val();
+
+          if (username == "" || password == "") {
+            alert("Please fill  out all fields!");
+          } else {
+            var data = {
+                username: username,
+                password: password,
+               
+            };
+
+ 
+            $.ajax({
+            type: 'POST',
+            url: '/login/',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            headers: {
+                'X-CSRFToken': csrftoken  
+            },
+            success: function(response) {
+                localStorage.setItem('access_token', response.access);
+                localStorage.setItem('refresh_token', response.refresh);
+                localStorage.setItem('access_token_exp', response.access_exp);
+                
+                alert('Login successful!');
+                window.location.href = '/dashboard/';
+                
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                alert('Login failed: ' + xhr.responseJSON.error);
+            }
+        });
+          }
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <!-- ======= Header ======= -->
+    <header id="header" class="fixed-top">
+      <div class="container d-flex align-items-center">
+        <h1 class="logo me-auto"><a href="">TEXT VAULT</a></h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="index.html" class="logo me-auto"><img src="{% static 'assets2/img/logo.png" alt="" class="img-fluid"></a>-->
+
+        <nav id="navbar" class="navbar">
+          <ul>
+            <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
+            <li><a class="nav-link scrollto" href="#about">About</a></li>
+            <li><a class="nav-link scrollto" href="#services">Services</a></li>
+
+            <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+            <li>
+              <button class="logbtn" href="" id="flipid">Register</button>
+            </li>
+          </ul>
+          <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav>
+        <!-- .navbar -->
+      </div>
+    </header>
+    <!-- End Header -->
+
+    <!-- ======= Hero Section ======= -->
+    <section id="hero" class="d-flex align-items-center" style="height:1000px;">
+      <div class="container">
+      
+
+        <div class="row">
+          <div
+            class="col-lg-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-1"
+            data-aos="fade-up"
+            data-aos-delay="200"
+          >
+            <h1>Effortless Data Management</h1>
+            <h2>Simplifying Text Storage and Retrieval</h2>
+          </div>
+
+          <div
+            class="col-lg-6 order-1 order-lg-2 hero-img"
+            data-aos="zoom-in"
+            data-aos-delay="200"
+          >
+          
+
+          <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+          <div class="registrationform animate__animated animate__fadeInDownBig" id="registrationformid">
+            <div class="formclass" style="font-size: 14px; height: fit-content;">
+              <h4 style="font-size: 16px;">Register Here</h4>
+          
+              <label for="firstname" style="font-size: 14px;">First Name</label>
+              <input type="text" placeholder="First Name" id="firstname" style="font-size: 14px;" />
+          
+              <label for="lastname" style="font-size: 14px;">Last Name</label>
+              <input type="text" placeholder="Last Name" id="lastname" style="font-size: 14px;" />
+          
+              <label for="email" style="font-size: 14px;">Email</label>
+              <input type="email" placeholder="Email" id="email" style="font-size: 14px;" />
+          
+              <label for="newusername" style="font-size: 14px;">Username</label>
+              <input type="text" placeholder="Username" id="newusername" style="font-size: 14px;" />
+          
+              <label for="newpassword" style="font-size: 14px;">Password</label>
+              <input type="password" placeholder="Password" id="newpassword" style="font-size: 14px;" />
+          
+              <button class="button_login" id="registerbtn" style="font-size: 14px;">Register</button>
+            </div>
+          </div>
+          
+
+
+          
+
+            <div
+              class="loginform animate__animated animate__fadeInDownBig"
+              id="loginformid" style="margin-bottom: 200px;"
+            >
+         
+              <div class="formclass" style="font-size: 14px; height: fit-content;" >
+                <h4>Login Here</h4>
+
+                <label for="username" style="font-size: 14px;" >Username</label>
+                <input type="text" placeholder="Username" id="username" style="font-size: 14px;" />
+
+                <label for="password" style="font-size: 14px;" >Password</label>
+                <input type="password" placeholder="Password" id="password" style="font-size: 14px;" />
+
+                <button class="button_login" id="loginbtn">Log In</button>
+              </div>
+            </div>
+
+
+          
+
+
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End Hero -->
+
+    <main id="main">
+
+
+      <!-- ======= About Us Section ======= -->
+      <section id="about" class="about">
+        <div class="container" data-aos="fade-up">
+      
+
+
+          <div class="section-title">
+            <h2>About Us</h2>
+            <p>
+              At TEXT VAULT, we are dedicated to revolutionizing the way you handle text snippets. Our team is committed to providing a seamless platform for saving and retrieving short text pieces effortlessly. With a focus on user convenience, we aim to empower businesses and individuals alike with efficient data management solutions. Join us on this journey as we streamline your text workflow and enhance your productivity."
+            </p>
+          </div>
+
+        </div>
+      </section>
+      <!-- End About Us Section -->
+
+
+      
+      
+      <!-- ======= Services Section ======= -->
+      <section id="services" class="services section-bg">
+        <div class="container" data-aos="fade-up">
+          <div class="section-title">
+            <h2>Services</h2>
+            <p>
+              Our service is designed to revolutionize the way you interact with text snippets. With intuitive features and seamless functionality, we provide a comprehensive solution for storing, organizing, and retrieving short text pieces. Whether you're a professional seeking to streamline your workflow or an individual looking to keep track of important notes, our platform empowers you to do so with ease. Backed by robust technology and user-centric design, we're dedicated to enhancing your text management experience and maximizing your productivity. Welcome to a new era of effortless text handling with TEXT VAULT
+            </p>
+          </div>
+
+          
+        </div>
+      </section>
+      <!-- End Services Section -->
+
+
+      <!-- ======= Contact Section ======= -->
+      <section id="contact" class="contact">
+        <div class="container" data-aos="fade-up">
+          <div class="section-title">
+            <h2>Contact</h2>
+            <p>
+              Magnam dolores commodi suscipit. Necessitatibus eius consequatur
+              ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam
+              quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea.
+              Quia fugiat sit in iste officiis commodi quidem hic quas.
+            </p>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-5 d-flex align-items-stretch">
+              <div class="info">
+                <div class="address">
+                  <i class="bi bi-geo-alt"></i>
+                  <h4>Location:</h4>
+                  <p>Infopark Phase 1, Kochi,India</p>
+                </div>
+
+                <div class="email">
+                  <i class="bi bi-envelope"></i>
+                  <h4>Email:</h4>
+                  <p>info@example.com</p>
+                </div>
+
+                <div class="phone">
+                  <i class="bi bi-phone"></i>
+                  <h4>Call:</h4>
+                  <p>+1 5589 55488 55s</p>
+                </div>
+
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12097.433213460943!2d-74.0062269!3d40.7101282!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xb89d1fe6bc499443!2sDowntown+Conference+Center!5e0!3m2!1smk!2sbg!4v1539943755621"
+                  frameborder="0"
+                  style="border: 0; width: 100%; height: 290px"
+                  allowfullscreen
+                ></iframe>
+              </div>
+            </div>
+
+            <div class="col-lg-7 mt-5 mt-lg-0 d-flex align-items-stretch">
+              <form
+                action="forms/contact.php"
+                method="post"
+                role="form"
+                class="php-email-form"
+              >
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <label for="name">Your Name</label>
+                    <input
+                      type="text"
+                      name="name"
+                      class="form-control"
+                      id="name"
+                      required
+                    />
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="name">Your Email</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      name="email"
+                      id="email"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="name">Subject</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="subject"
+                    id="subject"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="name">Message</label>
+                  <textarea
+                    class="form-control"
+                    name="message"
+                    rows="10"
+                    required
+                  ></textarea>
+                </div>
+                <div class="my-3">
+                  <div class="loading">Loading</div>
+                  <div class="error-message"></div>
+                  <div class="sent-message">
+                    Your message has been sent. Thank you!
+                  </div>
+                </div>
+                <div class="text-center">
+                  <button type="submit">Send Message</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- End Contact Section -->
+    </main>
+    <!-- End #main -->
+
+    <!-- ======= Footer ======= -->
+    <footer id="footer">
+    
+      
+
+      <div class="container footer-bottom clearfix">
+        <div class="copyright">
+          &copy; Copyright <strong><span>TEXT VAULT 2024</span></strong
+          >. All Rights Reserved
+        </div>
+        <div class="credits">
+         Designed by <a href="">Abhinav</a>
+        </div>
+      </div>
+    </footer>
+    <!-- End Footer -->
+
+    <div id="preloader"></div>
+    <a
+      href="#"
+      class="back-to-top d-flex align-items-center justify-content-center"
+      ><i class="bi bi-arrow-up-short"></i
+    ></a>
+
+    <!-- Vendor JS Files -->
+    <script src="{% static 'assets2/vendor/aos/aos.js' %}"></script>
+    <script src="{% static 'assets2/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets2/vendor/glightbox/js/glightbox.min.js' %}"></script>
+    <script src="{% static 'assets2/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+    <script src="{% static 'assets2/vendor/swiper/swiper-bundle.min.js' %}"></script>
+    <script src="{% static 'assets2/vendor/waypoints/noframework.waypoints.js' %}"></script>
+    <script src="{% static 'assets2/vendor/php-email-form/validate.js' %}"></script>
+
+    <!-- Template Main JS File -->
+    <script src="{% static 'assets2/js/main.js' %}"></script>
+  </body>
+</html>
