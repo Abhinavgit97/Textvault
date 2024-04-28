@@ -1,0 +1,259 @@
+{% extends 'base.html' %} 
+{% block content %}
+<style>
+  
+  @import url("https://fonts.googleapis.com/css?family=Nunito:400,700");
+
+  * {
+    transition: all 0.3s ease-out;
+  }
+
+  .container {
+    /* width: 100%;
+        height: 100%; */
+    display: flex;
+    flex-wrap: wrap;
+    /* align-items: center; */
+    /* justify-content: center; */
+  }
+  .key {
+    font-size: 14px;
+    font-weight: bold;
+    padding-right: 5px;
+    color: #030202;
+  }
+
+  .value {
+    font-size: 14px;
+
+    color: #2a2929;
+  }
+
+  .card2 {
+    display: block;
+    top: 0px;
+    position: relative;
+    min-width: 450px;
+    max-width: 262px;
+    background-color: rgb(255, 254, 254);
+    border-radius: 8px;
+    padding: 22px 24px;
+    margin: 7px;
+    text-decoration: none;
+    z-index: 0;
+    overflow: hidden;
+    border: 1px solid #f2f8f9;
+
+    &:hover {
+      transition: all 0.2s ease-out;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      top: -4px;
+      border: 1px solid #cccccc;
+      text-decoration: none;
+      background-color: rgb(255, 252, 252);
+      cursor: context-menu;
+    }
+
+    &:hover:before {
+      transform: scale(3.15);
+    }
+  }
+</style>
+
+<div class="content-wrapper">
+  <div class="row">
+    <div class="col-12 grid-margin">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Search content by tag</h4>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Select Tag</label>
+                <div class="col-sm-9">
+                  <div class="input-group">
+                      <select class="form-control" id="select_id">
+                          <option value="">Select an option</option>
+                         
+                      </select>
+                      <div class="input-group-append"> 
+                          <button class="btn btn-primary" id="searchbtn"><i class="fa fa-search"></i></button>
+                      </div>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="container">
+         
+
+          </div>
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+
+    var tagOption = $('#select_id');
+
+     
+    function getTaglist() {
+          $.ajax({
+              url: '/get_all_tags/', 
+              type: 'GET',
+              success: function(data) {
+                 
+                addTagtoSelect(data.taglist);
+              },
+              error: function(xhr, status, error) {
+     
+                  console.error(xhr.responseText);
+              }
+          });
+      }
+
+      getTaglist()
+
+      function addTagtoSelect(taglist) {
+          
+        taglist.forEach(function(tagdata) {
+          tagOption.append($('<option>', {
+          value: tagdata.title,
+          text: tagdata.title
+          }));
+
+          });
+      }
+
+
+
+
+    var snippetId = $("#sinppet_id").val();
+
+    function getSnippetdetails(idval) {
+      
+        $.ajax({
+            url: '/detail/' + idval + '/', 
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+              
+              $("#title_name").val(data.title);
+              $("#tag_name").val(data.tag_title);
+              $("#content").val(data.content);
+                console.log(data); 
+                
+            },
+            error: function(xhr, status, error) {
+         
+                console.error(xhr.responseText);
+            }
+        });
+  
+      }
+
+
+
+
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+               
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+
+
+    var csrftoken = getCookie('csrftoken');
+
+
+
+
+    $('#searchbtn').click(function() {
+      var selectedOption = $("#select_id").val();
+      
+
+      if(selectedOption == ""){
+
+        alert("Please select any option!!")
+      }
+      else{
+
+        $.ajax({
+        type: 'GET',
+        url: '/get_content_by_tag/' + selectedOption + '/',
+      
+        success: function(data) {
+          
+          if(data.content.length == 0){
+            alert("No data found!!!")
+            window.location.reload()
+          }
+          else{
+            $('.container').empty();
+            populateCards(data.content)
+          }
+     
+          
+        },
+        error: function(xhr, textStatus, errorThrown) {
+          console.error('Error while fetching data:', errorThrown);
+          
+        }
+      });
+      }
+
+     
+    });
+
+
+    function populateCards(contents) {
+          
+          contents.forEach(function(content) {
+              var card = $('<a>').addClass('card2').attr('href', '#');
+      
+              card.append($('<span>').addClass('key').text('Title: '));
+              card.append($('<span>').addClass('value').text(content.title).css('color', 'tomato'));
+              card.append($('<br>'));
+              card.append($('<span>').addClass('key').text('Content: '));
+              card.append($('<span>').addClass('value').text(content.content));
+              card.append($('<br>'));
+              card.append($('<span>').addClass('key').text('Created on: '));
+              card.append($('<span>').addClass('value').text(content.timestamp));
+              card.append($('<br>'));
+              card.append($('<span>').addClass('key').text('Created by: '));
+              card.append($('<span>').addClass('value').text(content.user_first_name));
+              card.append($('<br>'));
+           
+              $('.container').append(card);
+
+
+
+          });
+      }
+
+
+
+
+  });
+</script>
+
+
+{% endblock %}

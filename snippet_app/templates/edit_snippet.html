@@ -1,0 +1,157 @@
+{% extends 'base.html' %} 
+{% block content %}
+<style>
+  .mdi-delete:hover {
+    color: #030202;
+    font-size: 1.5em;
+    cursor: pointer;
+  }
+</style>
+
+<div class="content-wrapper">
+  <div class="row">
+    <div class="col-12 grid-margin">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">View/Update Text Content</h4>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Title</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="sinppet_id" value="{{topic_id}}" style="display: none;" />
+                  <input type="text" class="form-control" id="title_name" style="width: 180%;" />
+                </div>
+              </div>
+            </div>
+          </div>
+        
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Tag</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="tag_name" style="width: 180%;" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Text</label>
+                <div class="col-sm-9">
+                  <textarea class="form-control" id="content" rows="7" style="width: 180%;"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <center>
+            <button type="button" id="save_btn" class="btn btn-outline-secondary btn-icon-text" style="display: flex;align-items: center;">
+              <i class="mdi mdi-file-check btn-icon-append" style="font-size: 30px;"></i> 
+              Update Content 
+            </button>
+          </center>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+
+    var snippetId = $("#sinppet_id").val();
+
+    function getSnippetdetails(idval) {
+      
+        $.ajax({
+            url: '/detail/' + idval + '/', 
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+              
+              $("#title_name").val(data.title);
+              $("#tag_name").val(data.tag_title);
+              $("#content").val(data.content);
+                console.log(data); 
+                
+            },
+            error: function(xhr, status, error) {
+      
+                console.error(xhr.responseText);
+            }
+        });
+  
+      }
+
+
+      
+      getSnippetdetails(snippetId);
+
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+               
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+
+
+    var csrftoken = getCookie('csrftoken');
+
+    $('#save_btn').click(function() {
+      var snippetId = $("#sinppet_id").val();
+      var title = $('#title_name').val();
+      var content = $('#content').val();
+      var tag = $('#tag_name').val();
+
+      if(title == ""||content ==""||tag ==""){
+
+        alert("Please provide all details!!")
+      }
+      else{
+
+        $.ajax({
+        type: 'POST',
+        url: '/update_snippet/' + snippetId + '/',
+        data: {
+          'title': title,
+          'content': content,
+          'tag': tag
+        },
+        headers: {
+                'X-CSRFToken': csrftoken  
+            },
+        success: function(data) {
+
+          alert('Content updated successfully');
+          window.location.href = '/list_all_snippets/';
+          
+        },
+        error: function(xhr, textStatus, errorThrown) {
+          console.error('Error while updating content:', errorThrown);
+          
+        }
+      });
+      }
+
+     
+    });
+  });
+</script>
+
+
+{% endblock %}
